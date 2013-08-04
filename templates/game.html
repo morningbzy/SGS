@@ -1,0 +1,68 @@
+{% extends base.html %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ static_url("css/sgs.css") }}" type="text/css"/>
+{% end %}
+
+{% block js %}
+<script>
+    var UID = "{{ current_user['pk'] }}";
+</script>
+<script src="{{ static_url("js/cmd.js") }}" type="text/javascript"></script>
+<script src="{{ static_url("js/sgs_cmd_handler.js") }}" type="text/javascript"></script>
+<script src="{{ static_url("js/sgs.js") }}" type="text/javascript"></script>
+{% end %}
+
+{% block body %}
+<section  class="container game-table">
+    <section class="info-panel">
+    </section>
+    <section class="player-2 other">
+    </section>
+    <section class="player-3 other">
+    </section>
+    <section class="player-4 other">
+    </section>
+    <section class="player-5 other">
+    </section>
+    <section class="player-6 other">
+    </section>
+    <section class="player-1 other">
+    </section>
+    <section class="player-7 other">
+    </section>
+    <section class="player-0 self">
+        <section class="btn-group buttons">
+            <button class="btn btn-large btn-info ready">准备</button>
+            <button class="btn btn-large btn-warning unready hidden">取消准备</button>
+            <button class="btn btn-large btn-info ok hidden">确定</button>
+            <button class="btn btn-large cancel hidden">取消</button>
+            <a href="/auth/logout" class="btn btn-large logout">退出</a>
+        </section>
+        <div class="name"></div>
+        <div class="role"></div>
+        <div class="figure"></div>
+    </section>
+    <section id="player-tpl" class="hidden">
+        <div class="name"></div>
+        <div class="role"></div>
+        <div class="figure"></div>
+    </section>
+</section>
+<div class="figure-candidate-popup popup modal fade in hide" data-backdrop="static">
+    <div class="modal-header">
+        <h3>请选择武将</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row-fluid">
+            <ul class="thumbnails figures">
+                <li id="figure-candidate-tpl" class="span figure-candidate hide">
+                    <a href="#" class="thumbnail select-figure">
+                        <span class="name"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% end %}

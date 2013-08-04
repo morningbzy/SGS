@@ -1,0 +1,86 @@
+
+/**/
+body {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+a:hover, a:focus {
+    text-decoration: none;
+}
+
+.hidden {
+    display: none;
+}
+
+.game-table {
+    background: #eeeeee;
+    position: relative;
+    min-height: 700px;
+    height: 100%;
+}
+
+.info-panel {
+    background: #ffffff;
+    position: absolute;
+    bottom: 230px;
+    left: 190px;
+    right: 190px;
+    top: 230px;
+    overflow: auto;
+}
+
+.other {
+    background: #999999;
+    float: left;
+    margin-right: 1.2%;
+    margin-bottom: 1.2%;
+    width: 19%;
+    height: 220px;
+}
+
+.player-6,
+.player-7 {
+    float: right;
+    margin-right: 0px;
+}
+
+.player-ready{
+    background: #000000;
+    color: #ffffff;
+}
+
+.self {
+    background: #999999;
+    width: 100%;
+    bottom: 0px;
+    height: 220px;
+    position: absolute;
+}
+
+.buttons {
+    position: absolute;
+    width: 300px;
+    height: 50px;
+    top: -25px;
+    right: 0px;
+    text-align: right;
+}
+
+.figure-candidate-popup {
+    width: 700px;
+    margin-left: -350px;
+}
+
+.figures .figure-candidate {
+    width: 19%;
+}
+
+.row-fluid .figures [class*="span"] {
+    margin-left: 1%;
+}
+
+.figures .figure-candidate>a {
+    height: 160px;
+}
