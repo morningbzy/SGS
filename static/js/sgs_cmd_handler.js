@@ -1,6 +1,6 @@
 
 var j$ = jQuery;
-var MAX_SEAT = 2;
+var MAX_SEAT = 0;
 
 var SgsCmdHandler = function() {
 
@@ -39,6 +39,7 @@ var SgsCmdHandler = function() {
     self._join = function(cmd) {
         if(self._is_me(cmd)) {
             j$(".player-0").attr("id", "seat-" + cmd.seat_id);
+            MAX_SEAT = cmd.max_seat;
             for(i = 1; i < MAX_SEAT; i ++) {
                 j$(".player-" + i).attr(
                         "id", "seat-" + ((cmd.seat_id + i) % MAX_SEAT));

@@ -56,6 +56,9 @@ class User(object):
             self.add_cmd(Cmd('SET_ROLE',
                              role_id=self.role,
                              label=ROLE_LABELS[self.role]))
+        if self.figure:
+            self.add_cmd(Cmd('SET_FIGURE',
+                             **self.figure.to_cmd_dict()))
 
     def set_role(self, role):
         self.role = role
@@ -65,9 +68,7 @@ class User(object):
 
     def set_figure(self, figure):
         self.figure = figure
-        self.add_cmd(Cmd('SET_FIGURE',
-                         figure_id=figure,
-                         figure_name=u'关羽'))
+        self.add_cmd(Cmd('SET_FIGURE', **figure.to_cmd_dict()))
 
 
 class UserList(object):

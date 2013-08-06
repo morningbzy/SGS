@@ -6,6 +6,7 @@ from random import randint
 from sgs.cmd import Cmd
 from sgs.constants import ROLE_LABELS
 from sgs.constants import ROLES
+from sgs.figure import global_figures
 from sgs.user import global_users
 
 
@@ -30,7 +31,10 @@ class SgsGame(Game, Phase):
             'UNREADY': self._unready,
         }
         self.wait_callback = None
+        self.wait_args = None
+        self.wait_kwargs = None
 
+    #-------------游戏阶段-------------
     def start(self):
         # 游戏开始
         global_users.broadcast_cmd(Cmd('GAME_START'))
@@ -53,11 +57,12 @@ class SgsGame(Game, Phase):
         # 主公选将
         #class ZhugongChooseFigurePhase(Phase):
         global_users.broadcast_cmd(Cmd('GAME_MSG', msg=u'等待主公选择武将'))
+        candidates = global_figures.take_zhugong_figures()
         self.game_board.zhugong.add_cmd(
             Cmd('SET_FIGURE_CANDIDATE',
-                figures=[{'pk': 1, 'name': u'关羽'},
-                         {'pk': 2, 'name': u'曹操'}]))
-        self.wait(self._on_zhugong_choose_figure)
+                figures=[c.to_cmd_dict() for c in candidates]))
+        global_figures.remove_used(candidates)
+        self.wait(self._on_zhugong_choose_figure, candidates=candidates)
 
     def _on_zhugong_choose_figure(self, cmd):
         """
@@ -66,20 +71,25 @@ class SgsGame(Game, Phase):
         zhugong = global_users.get_user(cmd.sender)
         if zhugong.role != ROLES.ZHUGONG or cmd.cmd != "CHOOSE_FIGURE":
             return
-        zhugong.set_figure(cmd.figure_id)
+        zhugong.set_figure(global_figures.figures[cmd.figure_id])
+        global_figures.add_used([cmd.figure_id])
         global_users.broadcast_cmd(
             Cmd('SHOW_FIGURE',
                 seat_id=zhugong.seat_id,
-                figures=[{'pk': 1, 'name': u'关羽'}]))
-        self.wait_callback = None
+                figures=[zhugong.figure.to_cmd_dict()]))
+        self.reset_wait_callback()
         # 其他人选将
         #class OtherChooseFigurePhase(Phase):
+        all_candidates = []
         for user in self.game_board.one_round(except_user=[zhugong.pk]):
+            candidates = global_figures.take_random_figure(count=2)
+            all_candidates.extend(candidates)
             user.add_cmd(
                 Cmd('SET_FIGURE_CANDIDATE',
-                    figures=[{'pk': 1, 'name': u'关羽'},
-                             {'pk': 2, 'name': u'曹操'}]))
-        self.wait(self._on_other_choose_figure)
+                    figures=[c.to_cmd_dict() for c in candidates]))
+        global_figures.remove_used(all_candidates)
+        self.wait(self._on_other_choose_figure,
+                  all_candidates=all_candidates)
 
     def _on_other_choose_figure(self, cmd):
         """
@@ -87,21 +97,31 @@ class SgsGame(Game, Phase):
         """
         user = global_users.get_user(cmd.sender)
         if user.figure is None:
-            user.set_figure(cmd.figure_id)
+            user.set_figure(global_figures.figures[cmd.figure_id])
+            global_figures.add_used([cmd.figure_id])
         if not self.game_board.is_all_chosen_figure():
             return
-        self.wait_callback = None
+        self.reset_wait_callback()
         # 所有人亮武将
         for user in self.game_board.one_round():
             global_users.broadcast_cmd(
                 Cmd('SHOW_FIGURE',
                     seat_id=user.seat_id,
-                    figures=[{'pk': user.figure, 'name': u'关羽'}]))
+                    figures=[user.figure.to_cmd_dict()]))
         # 每人首发4张牌
 
-    def wait(self, callback):
+    #----------------------------------
+
+    def wait(self, callback, *args, **kwargs):
         logging.info('[W] %s' % callback.__doc__.strip())
         self.wait_callback = callback
+        self.wait_args = args
+        self.wait_kwargs = kwargs
+
+    def reset_wait_callback(self):
+        self.wait_callback = None
+        self.wait_args = None
+        self.wait_kwargs = None
 
     def handle_cmd(self, cmd):
         if self.wait_callback:
@@ -117,7 +137,8 @@ class SgsGame(Game, Phase):
             if seat_id != -1:
                 user.seat_id = seat_id
                 self.game_board.join(seat_id, user)
-                cmd.update_args({'seat_id': seat_id})
+                cmd.update_args({'seat_id': seat_id,
+                                 'max_seat': self.game_board.MAX_SEAT})
                 global_users.broadcast_cmd(cmd)
         else:
             user.restore()  # 恢复用户游戏状态
@@ -189,7 +210,8 @@ class SgsGameBoard(object):
 
     def get_roles(self):
         roles_mapping = {
-            2: [ROLES.ZHUGONG, ROLES.FANZEI]
+            2: [ROLES.ZHUGONG, ROLES.FANZEI],
+            3: [ROLES.ZHUGONG, ROLES.FANZEI, ROLES.NEIJIAN]
             #TODO 多人
         }
         return roles_mapping[self.MAX_SEAT]
@@ -197,7 +219,6 @@ class SgsGameBoard(object):
     def set_role(self, user, role):
         user.set_role(role)
         self.roles[role].append(user)
-        print self.roles
 
     def get_role(self, role):
         return self.roles[role]
