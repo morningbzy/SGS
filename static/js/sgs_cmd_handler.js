@@ -59,8 +59,19 @@ var SgsCmdHandler = function() {
         }
     };
 
+    self._set_card = function(cmd) {
+        var card = j$("#card-tpl").clone();
+        card.removeAttr("id");
+        card.attr("data-pk", cmd.pk);
+        card.find(".suit").html(cmd.suit);
+        card.find(".number").html(cmd.number);
+        card.find(".name").html(cmd.name);
+        card.appendTo(j$(".self .cards"));
+    };
+
     self._set_figure = function(cmd) {
         j$(".self .figure").html(cmd.figure_name);
+        j$(".self .hp").html(cmd.hp);
         j$(".figure-candidate-popup").modal("hide");
     };
 
@@ -91,6 +102,8 @@ var SgsCmdHandler = function() {
         for(i in cmd.figures) {
             j$("#seat-" + cmd.seat_id + " .figure").html(
                     cmd.figures[i].name);
+            j$("#seat-" + cmd.seat_id + " .hp").html(
+                    cmd.figures[i].hp);
         }
     };
 
@@ -114,6 +127,7 @@ var SgsCmdHandler = function() {
         "GAME_START": self._game_start,
         "JOIN": self._join,
         "READY": self._ready,
+        "SET_CARD": self._set_card,
         "SET_FIGURE": self._set_figure,
         "SET_FIGURE_CANDIDATE": self._set_figure_candidate,
         "SET_ROLE": self._set_role,

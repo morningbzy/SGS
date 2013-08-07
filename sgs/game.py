@@ -3,6 +3,7 @@
 import logging
 from random import randint
 
+from sgs.card import global_cards
 from sgs.cmd import Cmd
 from sgs.constants import ROLE_LABELS
 from sgs.constants import ROLES
@@ -109,6 +110,11 @@ class SgsGame(Game, Phase):
                     seat_id=user.seat_id,
                     figures=[user.figure.to_cmd_dict()]))
         # 每人首发4张牌
+        for user in self.game_board.one_round():
+            cards = global_cards.get_cards(count=4)
+            user.set_cards(cards)
+            global_users.broadcast_cmd(
+                Cmd('GAIN_CARD', seat_id=user.seat_id, count=4))
 
     #----------------------------------
 

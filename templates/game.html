@@ -42,11 +42,15 @@
         <div class="name"></div>
         <div class="role"></div>
         <div class="figure"></div>
+        <div class="hp"></div>
+        <div class="cards"></div>
     </section>
     <section id="player-tpl" class="hidden">
         <div class="name"></div>
         <div class="role"></div>
         <div class="figure"></div>
+        <div class="hp"></div>
+        <div class="card-count">0</div>
     </section>
 </section>
 <div class="figure-candidate-popup popup modal fade in hide" data-backdrop="static">
@@ -64,5 +68,11 @@
             </ul>
         </div>
     </div>
+</div>
+
+<div id="card-tpl" class="card thumbnail">
+    <div class="suit"></div>
+    <div class="number"></div>
+    <div class="name"></div>
 </div>
 {% end %}

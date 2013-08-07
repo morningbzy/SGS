@@ -16,6 +16,7 @@ class User(object):
         self.is_ready = False
         self.role = None
         self.figure = None
+        self.cards = []
 
     def get_cmds(self, callback):
         if self.cmd_cache:
@@ -69,6 +70,11 @@ class User(object):
     def set_figure(self, figure):
         self.figure = figure
         self.add_cmd(Cmd('SET_FIGURE', **figure.to_cmd_dict()))
+
+    def set_cards(self, cards):
+        self.cards.append(cards)
+        for card in cards:
+            self.add_cmd(Cmd('SET_CARD', **card.to_cmd_dict()))
 
 
 class UserList(object):

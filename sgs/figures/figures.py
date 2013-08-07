@@ -11,7 +11,8 @@ class FigureBase(SgsCommandable):
     def to_cmd_dict(self):
         return {
             'pk': self.pk,
-            'name': self.name
+            'name': self.name,
+            'hp': self.hp
         }
 
 
@@ -38,9 +39,9 @@ class CaoCao(FigureBase):
                 'style': SKILL_STYLES.ZHUGONG,
                 'name': u'护驾',
                 'desc': u'主公技，当你需要使用（或打出）一张【闪】时，'
-                + u'你可以发动护驾。所有“魏”势力角色按行动顺序依次选择是'
-                + u'否打出一张【闪】“提供”给你（然后视为由你使用或打出），'
-                + u'直到有—名角色或没有任何角色决定如此做时为止。',
+                      + u'你可以发动护驾。所有“魏”势力角色按行动顺序依次选择是'
+                      + u'否打出一张【闪】“提供”给你（然后视为由你使用或打出），'
+                      + u'直到有—名角色或没有任何角色决定如此做时为止。',
                 'exec_fun': self._skill02}
         }
 
@@ -128,15 +129,15 @@ class DaQiao(FigureBase):
                 'style': SKILL_STYLES.NORMAL,
                 'name': u'国色',
                 'desc': u'出牌阶段，你可以将你任意方块花色的牌当【乐不思蜀】'
-                + u'使用。',
+                      + u'使用。',
                 'exec_fun': self._skill01},
             'WU006s02': {
                 'pk': 'WU006s02',
                 'style': SKILL_STYLES.NORMAL,
                 'name': u'流离',
                 'desc': u'当你成为【杀】的目标时，你可以弃一张牌，'
-                + u'并将此【杀】转移给你攻击范围内的另一名角色。'
-                + u'（该角色不得是【杀】的使用者）',
+                      + u'并将此【杀】转移给你攻击范围内的另一名角色。'
+                      + u'（该角色不得是【杀】的使用者）',
                 'exec_fun': self._skill02},
         }
 
@@ -164,8 +165,8 @@ class XiaoQiao(FigureBase):
                 'style': SKILL_STYLES.NORMAL,
                 'name': u'天香',
                 'desc': u'每当你受到伤害时，你可以弃一张红桃手牌来转移此伤'
-                + u'害给任意一名其他角色，然后该角色摸X张牌；X为该角色当前'
-                + u'已损失的体力值。',
+                      + u'害给任意一名其他角色，然后该角色摸X张牌；X为该角色当前'
+                      + u'已损失的体力值。',
                 'exec_fun': self._skill01},
             'WU011s02': {
                 'pk': 'WU011s02',
@@ -199,9 +200,9 @@ class ZhouTai(FigureBase):
                 'style': SKILL_STYLES.SUODING,
                 'name': u'不屈',
                 'desc': u'任何时候，当你的体力被扣减到0或更低时，'
-                + u'每扣减1点体力：从牌堆亮出一张牌放在你的武将牌上，'
-                + u'若该牌的点数与你武将牌上已有的任何一张牌都不同，'
-                + u'你可以不死去。此牌亮出的时刻为你的濒死状态。',
+                      + u'每扣减1点体力：从牌堆亮出一张牌放在你的武将牌上，'
+                      + u'若该牌的点数与你武将牌上已有的任何一张牌都不同，'
+                      + u'你可以不死去。此牌亮出的时刻为你的濒死状态。',
                 'exec_fun': self._skill01},
         }
 

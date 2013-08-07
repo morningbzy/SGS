@@ -3,13 +3,14 @@
 import random
 
 from sgs.cards.cards import CardBase
+from sgs.cards.cards import all_cards
 
 
 class SgsCard(object):
     def __init__(self):
-        self.cards = {}  # 所有的卡牌
+        self.cards = all_cards  # 所有的卡牌
         self.unused = []  # 摸牌堆
-        self.used = []  # 弃牌堆的卡牌
+        self.used = all_cards.keys()  # 弃牌堆的卡牌
         self.onhand = []  # 玩家正在使用的卡牌
 
     def shuffle(self):
@@ -27,7 +28,7 @@ class SgsCard(object):
         # 牌不够，则回收弃牌堆，洗牌
         if count > len(self.unused):
             self.shuffle()
-        raise len(self.unused) > count, u'牌不够了'
+        assert len(self.unused) > count, u'牌不够了'
 
         cards = self.unused[:count]
         self.unused = self.unused[count:]
